@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>vue 入门</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="vue.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!--数据绑定  {{content}} 等价于 v-html="content" v-text="content"-->
+        <!--v-text v-html的不同点是 text会转义，html直接解析html标签-->
+         <!--v-on: 可以简写成@-->
+        <div id="bind" v-html="content" v-on:click="handleClick"></div>
+
+        <!--属性绑定：v-bind:title 可以简写成:title-->
+        <div id="double-bind" v-bind:title="msg">
+            {{msg}}
+            <input v-model:value="content" />
+            <div>{{content}}</div>
+        </div>
+
+        <!--计算属性和侦听器-->
+        <div id="listener">
+            <span>firstname</span><input v-model="firstname" />
+            <span>lastname</span><input v-model="lastname" />
+            <div>{{fullName}}</div>
+            <div>{{count}}</div>
+        </div>
+
+        <!--v-if v-show v-for-->
+        <div id="condition">
+            <!--dom被创建又被销毁-->
+            <span v-if="show">hello</span>
+
+            <!--dom通过css被隐藏或显示-->
+            <span v-show="show">world</span>
+            <button @click="toogle">toogle</button>
+
+            <!--v-for-->
+            <ul>
+                <li v-for="(item,index) in list">{{index}}:{{item}}</li>
+            </ul>
+        </div>
+
+        <script>
+            //挂载点、模版、实例
+           const vm1= new Vue({
+                el:'#root',//通过el和div#root 进行关联div#root就称为挂载点
+                template:'<h1>{{msg}}</h1>',//模版 可以将该段内容写在template属性中，也可以写到挂载点内部
+                data:{
+                    msg:'hello world'
+                }
+            })
+
+            // 数据绑定、事件绑定、方法定义
+            new Vue({
+                el:'#bind',
+                data:{
+                    content:'hello'
+                },
+                methods:{//所有的事件相关的方法都需要定义在methods中，{[key:string]:Function}
+                    handleClick:function(){
+                        alert(123);
+                        this.content='world';
+                    }
+                }
+            })
+
+            //属性绑定 、双向绑定
+            new Vue({
+                el:'#double-bind',
+                data:{
+                    msg:'hello world',
+                    content:'this is content'
+                }
+            })
+
+            // 计算属性和侦听器
+            new Vue({
+                el:'#listener',
+                data:{
+                    firstname:'',
+                    lastname:'',
+                    count:0
+                },
+                computed:{//计算属性
+                    fullName:function(){
+                        return `my name is ${this.firstname}.${this.lastname}`;
+                    }
+                },
+                watch:{//监听自定义属性和计算属性的变化
+                    fullName:function(){
+                        this.count++;
+                    }
+                }
+            })
+
+
+            new Vue({
+                el:'#condition',
+                data:{
+                    show:false,
+                    list:[1,2,3,4,3]
+                },
+                methods:{
+                    toogle:function(){
+                        this.show=!this.show;
+                    }
+                }
+            })
+        </script>
+        
+    </body>
+</html>
